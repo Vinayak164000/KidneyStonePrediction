@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Classification Model</title>
+</head>
+<body>
+    <h1>ML Classification Model</h1>
+
+    <form id="predictionForm">
+        <label for="gravity">Gravity:</label>
+        <input type="number" id="gravity" name="gravity" required><br>
+
+        <label for="urea">Urea:</label>
+        <input type="number" id="urea" name="urea" required><br>
+
+        <label for="ph">pH:</label>
+        <input type="number" id="ph" name="ph" required><br>
+
+        <label for="cond">Cond:</label>
+        <input type="number" id="cond" name="cond" required><br>
+
+        <label for="calc">Calc:</label>
+        <input type="number" id="calc" name="calc" required><br>
+
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function predict() {
+            // Get values from the form
+            const gravity = document.getElementById('gravity').value;
+            const urea = document.getElementById('urea').value;
+            const ph = document.getElementById('ph').value;
+            const cond = document.getElementById('cond').value;
+            const calc = document.getElementById('calc').value;
+
+            // Prepare data for POST request
+            const data = {
+                gravity: parseFloat(gravity),
+                urea: parseFloat(urea),
+                ph: parseFloat(ph),
+                cond: parseFloat(cond),
+                calc: parseFloat(calc)
+            };
+
+            // Make POST request to Flask API
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the prediction result
+                document.getElementById('result').innerHTML = `Prediction: ${data.prediction}`;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
